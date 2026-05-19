@@ -1,0 +1,30 @@
+# === KRUSIAL & RAHASIA (Wajib Disembunyikan) ===
+.env
+application-local.properties
+
+# === Spring Boot / Java Target (File Hasil Build) ===
+**/target/
+*.jar
+*.war
+*.ear
+
+# === Maven Build Tool ===
+.mvn/
+mvnw
+mvnw.cmd
+.mtj.tmp/
+
+# === VS Code IDE Configuration ===
+.vscode/
+*.code-workspace
+.history/
+
+# === macOS System Files (File Sampah Mac) ===
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.Trashes
