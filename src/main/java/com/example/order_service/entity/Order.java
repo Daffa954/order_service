@@ -40,9 +40,8 @@ public class Order {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
-    @Column(name="total_weight")
+    @Column(name = "total_weight")
     private Double totalWeight;
-
 
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
@@ -59,6 +58,18 @@ public class Order {
     @Column(name = "shipping_method")
     private String shippingMethod;
 
+    @Column(name = "courier_name")
+    private String courierName; // Contoh: "Wahana"
+
+    @Column(name = "courier_code")
+    private String courierCode; // Contoh: "wahana" atau "jne" (Penting untuk API)
+
+    @Column(name = "courier_service")
+    private String courierService; // Contoh: "Ekonomis" atau "REG"
+
+    @Column(name = "etd")
+    private String etd; // Contoh: "3 day" (Pakai String saja karena format Komerce bisa "2-3 hari")
+
     @Column(name = "shipping_address")
     private String shippingAddress;
 
@@ -70,6 +81,17 @@ public class Order {
 
     @Column(name = "shipping_district")
     private String shippingDistrict;
+
+    @Column(name = "shipping_city_id")
+    private Long shippingCityId; // Untuk referensi API Komerce/RajaOngkir
+
+    @Column(name = "shipping_province_id")
+    private Long shippingProvinceId; // Untuk referensi API Komerce/RajaOngki
+
+     @Column(name = "shipping_district_id")
+    private Long shippingDistrictId; // Untuk referensi API Komerce/RajaOngki
+
+
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
@@ -252,8 +274,49 @@ public class Order {
         this.transactionId = transactionId;
     }
 
-    
+    // create getter and setter for courierName, courierCode, courierService, etd
+    public String getCourierName() {
+        return courierName;
+    }
 
-    
+    public void setCourierName(String courierName) {
+        this.courierName = courierName;
+    }
+
+    public String getCourierCode() {
+        return courierCode;
+    }
+
+    public void setCourierCode(String courierCode) {
+        this.courierCode = courierCode;
+    }
+
+    public String getCourierService() {
+        return courierService;
+    }
+
+    public void setCourierService(String courierService) {
+        this.courierService = courierService;
+    }
+
+    public String getEtd() {
+        return etd;
+    }   
+
+    public void setEtd(String etd) {
+        this.etd = etd;
+    }
+
+    public Double getTotalWeight() {
+        return totalWeight;
+    }
+
+    public void setTotalWeight(Double totalWeight) {
+        this.totalWeight = totalWeight;
+    }
+
+
+
+
 
 }

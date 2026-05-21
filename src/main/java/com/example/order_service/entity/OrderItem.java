@@ -15,11 +15,14 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @Column(name = "item_id")
-    private Long itemId;
+    @Column(name = "product_id")
+    private Long productId;
 
-    @Column(name = "item_name")
-    private String itemName;
+    @Column(name = "product_name")
+    private String productName;
+
+    @Column(name = "weight")
+    private Double weight;
 
     @Column(name = "price_per_unit")
     private BigDecimal pricePerUnit;
@@ -56,21 +59,21 @@ public class OrderItem {
     }
 
     // Getter dan Setter Product id
-    public Long getItemId() {
-        return itemId;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     // Getter dan Setter Product Name
-    public String getItemName() {
-        return itemName;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     // Getter dan Setter Price Per Unit
@@ -99,6 +102,14 @@ public class OrderItem {
 
     public void setSubTotalPrice(BigDecimal subTotalPrice) {
         this.subTotalPrice = subTotalPrice;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
     }
 
 }

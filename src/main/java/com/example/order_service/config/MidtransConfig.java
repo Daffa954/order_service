@@ -19,6 +19,10 @@ public class MidtransConfig {
 
     @PostConstruct
     public void init() {
+        System.out.println("=== CEK MIDTRANS KEY ===");
+        System.out.println("Server Key : " + serverKey);
+        System.out.println("Is Production : " + isProduction);
+        System.out.println("========================");
         // Menginisialisasi konfigurasi global Midtrans
         Midtrans.serverKey = this.serverKey;
         Midtrans.clientKey = this.clientKey;

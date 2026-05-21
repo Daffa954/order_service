@@ -1,6 +1,7 @@
 package com.example.order_service.controller;
 
 import com.example.order_service.DTO.APIResponse;
+import com.example.order_service.DTO.CheckoutRequest;
 import com.example.order_service.entity.Order;
 import com.example.order_service.service.OrderService;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,29 @@ public class OrderController {
                 "There is order",
                 orders);
         return ResponseEntity.ok(response);
+    }
+
+
+    @PostMapping("/checkout")
+    public ResponseEntity<APIResponse<CheckoutResponse>> createOrder(@RequestBody CheckoutRequest request) {
+        try {
+            // Memanggil method createOrder yang sudah di-refactor menjadi clean code
+            CheckoutResponse checkoutResponse = orderService.createOrder(request);
+            
+            // Mengembalikan status 200 OK dengan payload token Midtrans
+            return ResponseEntity.ok(new APIResponse<>(
+                    200, 
+                    "Order berhasil dibuat, silakan lanjut ke pembayaran", 
+                    checkoutResponse
+            ));
+        } catch (Exception e) {
+            // Menangkap error jika Midtrans mengalami kendala atau ada error database
+            return ResponseEntity.badRequest().body(new APIResponse<>(
+                    400, 
+                    "Gagal melakukan checkout: " + e.getMessage(), 
+                    null
+            ));
+        }
     }
 
 
