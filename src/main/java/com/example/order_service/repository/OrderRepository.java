@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     // Kosong saja! Spring otomatis membuatkan fungsi insert, select, delete.
     List<Order> findByCustomerId(Long customerId);
+    List<Order> findByTransactionId(String transactionId);
 }
