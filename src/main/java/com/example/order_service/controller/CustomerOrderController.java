@@ -6,12 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.order_service.DTO.APIResponse;
+import com.example.order_service.DTO.CheckoutRequest;
 import com.example.order_service.DTO.OrderListResponse;
-import com.example.order_service.entity.Order;
 import com.example.order_service.service.OrderService;
 
 @RestController
@@ -29,7 +31,6 @@ public class CustomerOrderController {
         // Memanggil fungsi DTO yang baru kita buat di service
         List<OrderListResponse> orders = orderService.getOrderListBasedOnUserId(customerId);
 
-       
         if (orders.isEmpty()) {
             APIResponse<List<OrderListResponse>> response = new APIResponse<>(
                     404,
@@ -46,16 +47,34 @@ public class CustomerOrderController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/checkout")
+    public ResponseEntity<APIResponse<CheckoutResponse>> createOrder(@RequestBody CheckoutRequest request) {
+        try {
+            // Memanggil method createOrder yang sudah di-refactor menjadi clean code
+            CheckoutResponse checkoutResponse = orderService.createOrder(request);
 
+            // Mengembalikan status 200 OK dengan payload token Midtrans
+            return ResponseEntity.ok(new APIResponse<>(
+                    200,
+                    "Order berhasil dibuat, silakan lanjut ke pembayaran",
+                    checkoutResponse));
+        } catch (Exception e) {
+            // Menangkap error jika Midtrans mengalami kendala atau ada error database
+            return ResponseEntity.badRequest().body(new APIResponse<>(
+                    400,
+                    "Gagal melakukan checkout: " + e.getMessage(),
+                    null));
+        }
+    }
 
-    //Create order not from cart
+    // Create order not from cart
 
-    //Create order from cart
+    // Create order from cart
 
-    //Create order from cart if user want to checkout from different store
+    // Create order from cart if user want to checkout from different store
 
-    //pay
+    // pay
 
-    //Finish order
+    // Finish order
 
 }
