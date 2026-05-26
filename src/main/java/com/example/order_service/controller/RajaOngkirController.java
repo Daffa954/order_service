@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/rajaongkir")
+@RequestMapping("/rajaongkir")
 public class RajaOngkirController {
 
     private final RajaOngkirService rajaOngkirService;
@@ -17,7 +17,7 @@ public class RajaOngkirController {
         this.rajaOngkirService = rajaOngkirService;
     }
 
-    // Endpoint: GET http://localhost:8080/api/rajaongkir/district/575
+    // Endpoint: GET http://localhost:8080/orderservice/rajaongkir/district/575
     @GetMapping("/district/{cityId}")
     public ResponseEntity<APIResponse<Object>> getDistricts(@PathVariable String cityId) {
         try {
@@ -30,7 +30,7 @@ public class RajaOngkirController {
     }
 
     // Endpoint Baru: POST
-    // http://localhost:8080/api/rajaongkir/calculate-cart-options
+    // http://localhost:8080/orderservice/rajaongkir/calculate-cart-options
     @PostMapping("/calculate-cart-options")
     public ResponseEntity<APIResponse<Object>> getShippingOptionsFromCart(@RequestBody CartShippingRequest request) {
         try {

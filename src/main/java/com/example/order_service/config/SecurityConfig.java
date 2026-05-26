@@ -9,14 +9,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final APIKeyFilter apiKeyFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, APIKeyFilter apiKeyFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.apiKeyFilter = apiKeyFilter;
     }
 
     @Bean
@@ -26,23 +30,42 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         // 1. RUTE PUBLIK
-                        .requestMatchers("/api/payments/midtrans-webhook").permitAll() 
+                        .requestMatchers("/payments/midtrans-webhook").permitAll() 
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() 
-                        .requestMatchers("/api/rajaongkir/**").permitAll() // Sesuai dengan RajaOngkirController
+                        .requestMatchers("/rajaongkir/**").permitAll() 
 
                         // 2. RUTE KHUSUS SELLER
-                        // Wajib pakai token milik Seller
-                        .requestMatchers("/api/seller/orders/**").hasRole("SELLER")
+                        .requestMatchers("/seller/**").hasRole("SELLER")
 
                         // 3. RUTE CUSTOMER (PEMBELI)
-                        // Wajib pakai token (bisa token USER atau SELLER, karena seller juga bisa belanja)
-                        .requestMatchers("/order/customer/**").authenticated() 
-                        .requestMatchers("/api/orders/**").authenticated()
+                        .requestMatchers("/customer/**").authenticated() 
+                        .requestMatchers("/orders/**").authenticated()
 
                         // 4. ATURAN DEFAULT
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
+
+                // =======================================================
+                // TAMBAHKAN BLOK EXCEPTION HANDLING INI
+                // =======================================================
+                .exceptionHandling(exceptions -> exceptions
+                        // Handler ketika token tidak ada / tidak valid (401 Unauthorized)
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("{\"status\": 401, \"message\": \"Akses ditolak: Anda belum login atau token tidak valid.\", \"data\": null}");
+                        })
+                        // Handler ketika role tidak sesuai (403 Forbidden)
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.getWriter().write("{\"status\": 403, \"message\": \"Akses dilarang: Anda tidak memiliki izin (role) untuk rute ini.\", \"data\": null}");
+                        })
+                )
+                // =======================================================
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

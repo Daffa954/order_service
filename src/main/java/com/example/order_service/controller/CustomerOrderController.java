@@ -17,7 +17,7 @@ import com.example.order_service.DTO.OrderListResponse;
 import com.example.order_service.service.OrderService;
 
 @RestController
-@RequestMapping("/order/customer") // URL jelas khusus customer
+@RequestMapping("/customer") // URL jelas khusus customer
 public class CustomerOrderController {
     private final OrderService orderService;
 
@@ -25,7 +25,7 @@ public class CustomerOrderController {
         this.orderService = orderService;
     }
 
-    // Endpoint: GET http://localhost:8080/order/customer/{customerId}
+    // Endpoint: GET http://localhost:8080/orderservice/customer/{customerId}
     @GetMapping("/{customerId}")
     public ResponseEntity<APIResponse<List<OrderListResponse>>> getOrdersByCustomerId(@PathVariable Long customerId) {
         // Memanggil fungsi DTO yang baru kita buat di service

@@ -1,15 +1,34 @@
 package com.example.order_service.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class MidtransNotificationDto {
-    private String order_id;
-    private String transaction_status;
-    private String status_code;
-    private String gross_amount;
-    private String signature_key;
-    private String payment_type;
+    
+    @JsonProperty("order_id")
+    private String orderId;
+    
+    @JsonProperty("transaction_status")
+    private String transactionStatus;
+    
+    @JsonProperty("status_code")
+    private String statusCode;
+    
+    @JsonProperty("gross_amount")
+    private String grossAmount;
+    
+    @JsonProperty("signature_key")
+    private String signatureKey;
+    
+    @JsonProperty("payment_type")
+    private String paymentType;
+
+    @JsonProperty("transaction_id")
+    private String midtransTransactionId;
+
+    @JsonProperty("transaction_time")
+    private String transactionTime;
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -22,33 +22,35 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    // Endpoint: GET http://localhost:8080/api/orders
+    // Endpoint: GET http://localhost:8080/orderservice/orders
     @GetMapping
     public ResponseEntity<APIResponse<List<Order>>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
-        if (orders.isEmpty()) {
+        try {
+            List<Order> orders = orderService.getAllOrders();
+            
+            if (orders.isEmpty()) {
+                APIResponse<List<Order>> response = new APIResponse<>(
+                        HttpStatus.NOT_FOUND.value(),
+                        "There is no order yet",
+                        orders);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+            // Pesan sukses jika data ditemukan
             APIResponse<List<Order>> response = new APIResponse<>(
-                    HttpStatus.NOT_FOUND.value(),
-                    "There is no order yet",
+                    HttpStatus.OK.value(),
+                    "There is order",
                     orders);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            // Menangkap dan mengembalikan pesan jika terjadi kegagalan sistem/server
+            APIResponse<List<Order>> errorResponse = new APIResponse<>(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Gagal mengambil data order: " + e.getMessage(),
+                    null // Data diisi null karena gagal mengambil dari database
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
-
-        // Pesan sukses jika data ditemukan
-        APIResponse<List<Order>> response = new APIResponse<>(
-                HttpStatus.OK.value(),
-                "There is order",
-                orders);
-        return ResponseEntity.ok(response);
     }
-
-
-    
-
-
-
-
-
-    
-
 }
