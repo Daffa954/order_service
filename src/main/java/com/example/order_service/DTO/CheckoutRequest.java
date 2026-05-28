@@ -22,4 +22,14 @@ public class CheckoutRequest {
     // --- List Pesanan per Toko ---
     // Variabel "items" dan kurir global dihapus, diganti menjadi array per toko
     private List<ShopOrderDto> shopOrders; 
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+
 }

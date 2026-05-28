@@ -12,6 +12,7 @@ import com.example.order_service.entity.Payment;
 import com.example.order_service.enums.OrderStatus;
 import com.example.order_service.repository.OrderRepository;
 import com.example.order_service.repository.PaymentRepository;
+import com.midtrans.Midtrans;
 import com.midtrans.httpclient.SnapApi;
 import com.midtrans.httpclient.error.MidtransError;
 
@@ -183,11 +184,32 @@ public class OrderService {
                 .map(Order::getTotalAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+// Tambahkan ini di dalam class OrderService (bersama fungsi getAllOrders, dll)
 
+    public Order getOrderDetail(String transactionId, Long customerId) {
+        // Ambil data order menggunakan repository yang sudah ada
+        List<Order> orders = orderRepository.findByTransactionId(transactionId);
+        
+        if (orders == null || orders.isEmpty()) {
+            return null; // Transaksi tidak ditemukan
+        }
+
+        // Karena di frontend kita mendesain 1 transaksi per toko di detailnya,
+        // kita ambil index ke-0 sebagai representasi pesanan utama
+        Order order = orders.get(0);
+
+        // VALIDASI KEAMANAN SANGAT PENTING: 
+        // Pastikan JWT ID yang login sama dengan ID Pemilik Pesanan
+        if (!order.getCustomerId().equals(customerId)) {
+            throw new IllegalArgumentException("Akses ditolak! Anda tidak memiliki izin melihat pesanan ini.");
+        }
+
+        return order;
+    }
     private CheckoutResponse requestMidtransTransaction(String transactionId, BigDecimal grandTotal,
             String customerName) throws MidtransError {
         Map<String, Object> params = new HashMap<>();
-
+        Midtrans.isProduction = false;
         Map<String, String> transactionDetails = new HashMap<>();
         transactionDetails.put("order_id", transactionId);
         transactionDetails.put("gross_amount", grandTotal.toBigInteger().toString());

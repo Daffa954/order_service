@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/rajaongkir")
+@RequestMapping("/rajaongkir_o_s")
 public class RajaOngkirController {
 
     private final RajaOngkirService rajaOngkirService;

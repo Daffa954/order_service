@@ -40,7 +40,7 @@ public class SecurityConfig {
                         // 3. RUTE CUSTOMER (PEMBELI)
                         .requestMatchers("/customer/**").authenticated() 
                         .requestMatchers("/orders/**").authenticated()
-
+.requestMatchers("/customer/order/**").permitAll()
                         // 4. ATURAN DEFAULT
                         .anyRequest().authenticated()
                 )

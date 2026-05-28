@@ -1,0 +1,12 @@
+target/
+.mvn/
+mvnw
+mvnw.cmd
+.git/
+.gitignore
+.idea/
+*.iml
+
+# 💡 Tambahkan ini untuk mencegah kebocoran rahasia
+.env
+.env.*

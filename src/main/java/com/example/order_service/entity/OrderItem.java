@@ -2,6 +2,8 @@ package com.example.order_service.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonIgnore // 👈 TAMBAHKAN INI UNTUK MENGHENTIKAN LOOPING JSON
     private Order order;
 
     @Column(name = "product_id")
