@@ -16,11 +16,24 @@ services:
       retries: 5
     volumes:
       - order_db_data:/var/lib/postgresql/data
-
-  order-service:
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:80" # Akses pgAdmin di browser lewat localhost:5050
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      order-db:
+        condition: service_healthy
+  order-service-1:
     image: dbigboss/order-service:v1
     # build: .  <-- Hapus tanda pagar (#) di awal baris ini jika kamu ingin build ulang langsung dari folder lokal
-    container_name: order-service
+    container_name: order-service-1
     restart: unless-stopped
     ports:
       - "8080:8080"
@@ -46,5 +59,35 @@ services:
       order-db:
         condition: service_healthy
 
+  order-service-2:
+    image: dbigboss/order-service:v1
+    # build: .  <-- Hapus tanda pagar (#) di awal baris ini jika kamu ingin build ulang langsung dari folder lokal
+    container_name: order-service-2
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      # Koneksi Database
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://order-db:5432/orderdb
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      
+      # Midtrans Configuration
+      - MIDTRANS_SERVER_KEY=${MIDTRANS_SERVER_KEY}
+      - MIDTRANS_CLIENT_KEY=${MIDTRANS_CLIENT_KEY}
+      - MIDTRANS_IS_PRODUCTION=${MIDTRANS_IS_PRODUCTION}
+      
+      # Security & Auth
+      - JWT_SECRET=${JWT_SECRET}
+      - SERVICE_API_KEY=${SERVICE_API_KEY}
+      
+      # RajaOngkir Configuration
+      - RAJAONGKIR_KEY=${RAJAONGKIR_KEY}
+      - TOKO_ACTIVE_COURIERS=${TOKO_ACTIVE_COURIERS}
+    depends_on:
+      order-db:
+        condition: service_healthy
+
 volumes:
   order_db_data:
+  pgadmin_data:
